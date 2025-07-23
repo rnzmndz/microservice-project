@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: api-gateway
+  config:
+    import: optional:configserver:https://microservice-project-production.up.railway.app/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
