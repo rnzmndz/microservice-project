@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: employee-service
+  profiles:
+    active: dev
+  config:
+    import: optional:configserver:http://localhost:8888/
+  main:
+    allow-bean-definition-overriding: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

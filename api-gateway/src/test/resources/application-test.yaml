@@ -1,0 +1,4 @@
+stubrunner:
+  ids: com.renzo:employee-service:+:stubs:8081
+  repository-root: classpath:/contracts
+  stubs-mode: local

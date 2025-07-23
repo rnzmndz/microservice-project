@@ -1,0 +1,41 @@
+server:
+  port: 8080
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    urls:
+      - name: employee-service
+        url: /v3/api-docs/employee
+      - name: inventory-service
+        url: /v3/api-docs/inventory
+  api-docs:
+    enabled: true
+
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      routes:
+        - id: employee-service
+          uri: lb://employee-service
+          predicates:
+            - Path=/employee-service/**, /v3/api-docs/employee, /swagger-ui/**
+          filters:
+            - RewritePath=/employee-service/(?<segment>.*), /${segment}
+            - name: CircuitBreaker
+              args:
+                name: employeeCircuitBreaker
+                fallbackUri: forward:/fallback
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      employeeCircuitBreaker:
+        registerHealthIndicator: true
+        slidingWindowSize: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5s

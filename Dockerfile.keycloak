@@ -1,0 +1,17 @@
+# Stage 1: use Alpine to grab curl binary
+FROM alpine AS curl-downloader
+RUN apk add --no-cache curl
+
+# Stage 2: base Keycloak image
+FROM keycloak/keycloak:26.3
+
+# Switch to root to copy files
+USER root
+
+# Copy curl from Alpine
+COPY --from=curl-downloader /usr/bin/curl /usr/bin/curl
+COPY --from=curl-downloader /lib/ /lib/
+COPY --from=curl-downloader /usr/lib/ /usr/lib/
+
+# Restore user
+USER keycloak
