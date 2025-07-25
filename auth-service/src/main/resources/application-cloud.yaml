@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: auth-service
+  config:
+    import: optional:configserver:https://microservice-project-347v.onrender.com/
