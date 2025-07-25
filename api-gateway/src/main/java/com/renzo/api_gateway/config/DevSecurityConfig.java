@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 @Configuration
-@Profile({"dev", "docker", "railway"})
+@Profile({"dev", "docker", "cloud"})
 @EnableWebFluxSecurity
 public class DevSecurityConfig {
 
