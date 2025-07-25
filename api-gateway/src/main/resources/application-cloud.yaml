@@ -2,7 +2,7 @@ spring:
   application:
     name: api-gateway
   config:
-    import: optional:configserver:https://microservice-project-production.up.railway.app/
+    import: optional:configserver:https://microservice-project-347v.onrender.com/
 
 management:
   endpoints:
