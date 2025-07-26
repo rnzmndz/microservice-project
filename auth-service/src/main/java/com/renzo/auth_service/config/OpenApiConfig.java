@@ -11,7 +11,7 @@ import java.util.List;
 @Configuration
 public class OpenApiConfig {
 
-    @Value("${services.api-gateway.url}"
+    @Value("${services.api-gateway.url}")
     private String cloudUrl;
 
     @Bean
