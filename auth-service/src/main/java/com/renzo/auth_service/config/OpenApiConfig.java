@@ -11,9 +11,16 @@ import java.util.List;
 @Configuration
 public class OpenApiConfig {
 
+    @Value("${services.api-gateway.url}"
+    private String cloudUrl;
+
     @Bean
     public OpenAPI customOpenAPI() {
         String ip = NetworkUtils.getLocalIpAddress();
+        
+         Server cloud = new Server()
+                .url(cloudUrl)
+                .description("Cloud");
 
         Server localhost = new Server()
                 .url("http://localhost:8080")
@@ -28,6 +35,6 @@ public class OpenApiConfig {
                 .description("Docker Host");
 
         return new OpenAPI()
-                .servers(List.of(localhost, ipBased, docker));
+                .servers(List.of(localhost, ipBased, docker, cloud));
     }
 }
