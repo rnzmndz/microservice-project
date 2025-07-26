@@ -7,7 +7,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "employee-service")
+@FeignClient(name = "employee-service",
+            url="${serices.employee-service.url}")
 public interface EmployeeClient {
 
     @PostMapping("/api/v1/employees")
