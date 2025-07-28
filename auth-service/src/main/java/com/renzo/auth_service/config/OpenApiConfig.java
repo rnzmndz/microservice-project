@@ -13,28 +13,46 @@ import java.util.List;
 public class OpenApiConfig {
 
     @Value("${services.api-gateway.url}")
-    private String cloudUrl;
+    private String gatewayUrl;
 
     @Bean
     public OpenAPI customOpenAPI() {
-        String ip = NetworkUtils.getLocalIpAddress();
-
-        Server gateway = new Server()
-                .url(cloudUrl + "/auth-service")
-                .description("API Gateway");
-
-        Server localhost = new Server()
-                .url("http://localhost:8080/auth-service")
-                .description("Localhost through API Gateway");
-
-        Server ipBased = new Server()
-                .url("http://" + ip + ":8080/auth-service")
-                .description("Current machine IP through Gateway");
-
-        Server docker = new Server()
-                .url("http://host.docker.internal:8080/auth-service")
-                .description("Docker Host through Gateway");
-
-        return new OpenAPI().servers(List.of(gateway, localhost, ipBased, docker));
+        return new OpenAPI()
+            .servers(List.of(
+                new Server()
+                    .url(gatewayUrl + "/auth-service")
+                    .description("API Gateway")
+            ));
     }
 }
+
+
+// @Configuration
+// public class OpenApiConfig {
+
+//     @Value("${services.api-gateway.url}")
+//     private String cloudUrl;
+
+//     @Bean
+//     public OpenAPI customOpenAPI() {
+//         String ip = NetworkUtils.getLocalIpAddress();
+
+//         Server gateway = new Server()
+//                 .url(cloudUrl + "/auth-service")
+//                 .description("API Gateway");
+
+//         Server localhost = new Server()
+//                 .url("http://localhost:8080/auth-service")
+//                 .description("Localhost through API Gateway");
+
+//         Server ipBased = new Server()
+//                 .url("http://" + ip + ":8080/auth-service")
+//                 .description("Current machine IP through Gateway");
+
+//         Server docker = new Server()
+//                 .url("http://host.docker.internal:8080/auth-service")
+//                 .description("Docker Host through Gateway");
+
+//         return new OpenAPI().servers(List.of(gateway, localhost, ipBased, docker));
+//     }
+// }
