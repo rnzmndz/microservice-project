@@ -20,7 +20,7 @@ public class OpenApiConfig {
         return new OpenAPI()
             .servers(List.of(
                 new Server()
-                    .url(gatewayUrl + "/auth")
+                    .url(gatewayUrl)
                     .description("API Gateway")
             ));
     }
