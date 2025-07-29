@@ -1,18 +1,12 @@
 spring:
   application:
     name: config-service
-  security:
-    user:
-      name: admin
-      password: admin
-  profiles:
-    active: git
   cloud:
     config:
       server:
         git:
           uri: https://github.com/rnzmndz/config.git
-#          search-paths: config-repo // use this when you use the link of microservice-component
+#          search-paths: config // use this when you use the link of microservice-component
           default-label: main
           clone-on-start: true
 

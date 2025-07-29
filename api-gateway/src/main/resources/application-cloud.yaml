@@ -2,7 +2,7 @@ spring:
   application:
     name: api-gateway
   config:
-    import: optional:configserver:https://microservice-project-347v.onrender.com/
+    import: optional:configserver:${CONFIG_URL}
 
 management:
   endpoints:
