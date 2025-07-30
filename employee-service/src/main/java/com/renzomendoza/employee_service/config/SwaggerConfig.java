@@ -23,7 +23,7 @@ import java.util.List;
 )
 public class SwaggerConfig {
 
-    @Value("${services.api-gateway.url}")
+    @Value("${services.api-gateway.url:http://api-gateway:8080}")
     private String cloudUrl;
 
     @Bean
