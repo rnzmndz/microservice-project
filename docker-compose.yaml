@@ -111,6 +111,10 @@ services:
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://postgres:5432/keycloak
+      - KC_DB_USERNAME=postgres
+      - KC_DB_PASSWORD=postgres
     ports:
       - "8180:8080"
     command: ["start-dev", "--import-realm"]

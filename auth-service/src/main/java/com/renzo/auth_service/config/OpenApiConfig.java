@@ -24,15 +24,15 @@ import java.util.List;
                  .description("API Gateway");
 
          Server localhost = new Server()
-                 .url("http://localhost:8080/auth-service")
+                 .url("http://localhost:8080")
                  .description("Localhost through API Gateway");
 
          Server ipBased = new Server()
-                 .url("http://" + ip + ":8080/auth-service")
+                 .url("http://" + ip + ":8080")
                  .description("Current machine IP through Gateway");
 
          Server docker = new Server()
-                 .url("http://host.docker.internal:8080/auth-service")
+                 .url("http://host.docker.internal:8080")
                  .description("Docker Host through Gateway");
 
          return new OpenAPI().servers(List.of(gateway, localhost, ipBased, docker));
