@@ -1,2 +1,2 @@
-CREATE DATABASE employee_database;
 CREATE DATABASE keycloak;
+CREATE DATABASE employee_database;

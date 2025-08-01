@@ -117,7 +117,7 @@ services:
       - KC_DB_PASSWORD=postgres
     ports:
       - "8180:8080"
-    command: ["start-dev", "--import-realm"]
+    command: ["start-dev", "--import-realm", "--verbose"]
     volumes:
       - ./config:/opt/keycloak/data/import
     healthcheck:
@@ -126,6 +126,8 @@ services:
       timeout: 10s
       retries: 10
       start_period: 90s
+    depends_on:
+      - postgres
 
 volumes:
   postgres_data:
