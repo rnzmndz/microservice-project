@@ -7,6 +7,7 @@ import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.UserResource;
+import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -111,5 +112,14 @@ public class KeycloakService {
         } catch (Exception e) {
             throw new RuntimeException("Failed to create user in Keycloak: " + e.getMessage(), e);
         }
+    }
+
+    public boolean isEmailExisting(String email){
+        UsersResource usersResource = keycloak.realm(realm).users();
+
+        // Search for users by email
+        List<UserRepresentation> users = usersResource.search(email);
+
+        return !users.isEmpty();
     }
 }

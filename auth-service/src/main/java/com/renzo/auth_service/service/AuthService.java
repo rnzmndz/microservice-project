@@ -29,9 +29,12 @@ public class AuthService {
     public RegisterResponse register(RegisterRequest request) {
         try {
             // 1. Validate email doesn't already exist
-            if (authUserRepository.findByEmail(request.getEmail()).isPresent()) {
+            if (keycloakService.isEmailExisting(request.getEmail())) {
                 throw new RuntimeException("Email already exists");
             }
+//            if (authUserRepository.findByEmail(request.getEmail()).isPresent()) {
+//                throw new RuntimeException("Email already exists");
+//            }
 
             // 2. Create user in Keycloak first
             String keycloakId = keycloakService.createUser(request);
@@ -45,21 +48,21 @@ public class AuthService {
                 throw new RuntimeException("Registration process interrupted", e);
             }
 
-            // 4. Create local user record with proper data
-            AuthUser authUser = AuthUser.builder()
-                    .id(userId)
-                    .realmId(realm)
-                    .username(request.getUsername())
-                    .email(request.getEmail())
-                    .firstName(request.getEmployeeCreateDto().getFirstName())
-                    .lastName(request.getEmployeeCreateDto().getLastName())
-                    .enabled(true)
-                    .emailVerified(true)
-                    .createdTimestamp(System.currentTimeMillis())
-                    .build();
-
-            // 5. Save local user first
-            authUserRepository.save(authUser);
+//            // 4. Create local user record with proper data
+//            AuthUser authUser = AuthUser.builder()
+//                    .id(userId)
+//                    .realmId(realm)
+//                    .username(request.getUsername())
+//                    .email(request.getEmail())
+//                    .firstName(request.getEmployeeCreateDto().getFirstName())
+//                    .lastName(request.getEmployeeCreateDto().getLastName())
+//                    .enabled(true)
+//                    .emailVerified(true)
+//                    .createdTimestamp(System.currentTimeMillis())
+//                    .build();
+//
+//            // 5. Save local user first
+//            authUserRepository.save(authUser);
 
             // 6. Create employee record
             request.getEmployeeCreateDto().setId(userId);
