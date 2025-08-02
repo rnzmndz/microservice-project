@@ -3,8 +3,6 @@ package com.renzo.auth_service.service;
 import com.renzo.auth_service.client.EmployeeClient;
 import com.renzo.auth_service.dto.RegisterRequest;
 import com.renzo.auth_service.dto.RegisterResponse;
-import com.renzo.auth_service.model.AuthUser;
-import com.renzo.auth_service.repository.AuthUserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +16,6 @@ import java.util.UUID;
 @Slf4j
 public class AuthService {
 
-    private final AuthUserRepository authUserRepository;
     private final KeycloakService keycloakService;
     private final EmployeeClient employeeClient;
 
@@ -28,43 +25,24 @@ public class AuthService {
     @Transactional
     public RegisterResponse register(RegisterRequest request) {
         try {
-            // 1. Validate email doesn't already exist
+            // Validate email doesn't already exist
             if (keycloakService.isEmailExisting(request.getEmail())) {
                 throw new RuntimeException("Email already exists");
             }
-//            if (authUserRepository.findByEmail(request.getEmail()).isPresent()) {
-//                throw new RuntimeException("Email already exists");
-//            }
 
-            // 2. Create user in Keycloak first
+            // Create user in Keycloak first
             String keycloakId = keycloakService.createUser(request);
             UUID userId = UUID.fromString(keycloakId);
 
-            // 3. Wait a bit longer to ensure Keycloak fully processes the user
+            // Wait a bit longer to ensure Keycloak fully processes the user
             try {
-                Thread.sleep(2000); // Increased to 2 seconds
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 throw new RuntimeException("Registration process interrupted", e);
             }
 
-//            // 4. Create local user record with proper data
-//            AuthUser authUser = AuthUser.builder()
-//                    .id(userId)
-//                    .realmId(realm)
-//                    .username(request.getUsername())
-//                    .email(request.getEmail())
-//                    .firstName(request.getEmployeeCreateDto().getFirstName())
-//                    .lastName(request.getEmployeeCreateDto().getLastName())
-//                    .enabled(true)
-//                    .emailVerified(true)
-//                    .createdTimestamp(System.currentTimeMillis())
-//                    .build();
-//
-//            // 5. Save local user first
-//            authUserRepository.save(authUser);
-
-            // 6. Create employee record
+            // Create employee record
             request.getEmployeeCreateDto().setId(userId);
             try {
                 employeeClient.createEmployee(request.getEmployeeCreateDto());

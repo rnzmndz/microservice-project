@@ -96,7 +96,7 @@ services:
   postgres:
     image: postgres:15-alpine
     environment:
-      - POSTGRES_DB=auth_database
+      - POSTGRES_DB=keycloak
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
