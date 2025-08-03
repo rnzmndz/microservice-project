@@ -11,55 +11,32 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Entity
-@Table(name = "user_entity")
-@EntityListeners(AuditingEntityListener.class)
+//@Getter
+//@Setter
+//@AllArgsConstructor
+//@NoArgsConstructor
+//@Builder
+//@Entity
+//@Table(name = "user_entity")
+//@EntityListeners(AuditingEntityListener.class)
 public class AuthUser {
 
-    @Id
-    @Column(name = "id", nullable = false)
-    private UUID id;
-
-    @Column(name = "realm_id", nullable = false)
-    private String realmId;
-
-    @Column(name = "username", nullable = false)
-    private String username;
-
-    @Column(name = "enabled", nullable = false)
-    private boolean enabled;
-
-    @Column(name = "email")
-    private String email;
-
-    @Column(name = "first_name")
-    private String firstName;
-
-    @Column(name = "last_name")
-    private String lastName;
-
-    @Column(name = "created_timestamp")
-    private Long createdTimestamp;
-
-    @Column(name = "email_verified")
-    private Boolean emailVerified;
-
-    //Auditing fields
-    @CreatedDate
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
-
-    @CreatedBy
-    private String createdBy;
-
-    @LastModifiedBy
-    private String modifiedBy;
+//    @Id
+//    @Column(name = "id", nullable = false)
+//    private UUID id;
+//
+//
+//    //Auditing fields
+//    @CreatedDate
+//    private LocalDateTime createdAt;
+//
+//    @LastModifiedDate
+//    private LocalDateTime updatedAt;
+//
+//    @CreatedBy
+//    private String createdBy;
+//
+//    @LastModifiedBy
+//    private String modifiedBy;
 
 }
