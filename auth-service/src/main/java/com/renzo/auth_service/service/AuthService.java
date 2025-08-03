@@ -3,7 +3,6 @@ package com.renzo.auth_service.service;
 import com.renzo.auth_service.client.EmployeeClient;
 import com.renzo.auth_service.dto.RegisterRequest;
 import com.renzo.auth_service.dto.RegisterResponse;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +21,6 @@ public class AuthService {
     @Value("${keycloak.realm}")
     private String realm;
 
-    @Transactional
     public RegisterResponse register(RegisterRequest request) {
         try {
             // Validate email doesn't already exist
