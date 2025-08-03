@@ -56,7 +56,7 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/auth_database
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/auth_database
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
     depends_on:
