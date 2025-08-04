@@ -37,7 +37,7 @@ public class AuthController {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    @PostMapping("/login")
+    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TokenResponse> login(@RequestBody AuthRequest request) {
         // Build form data
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
