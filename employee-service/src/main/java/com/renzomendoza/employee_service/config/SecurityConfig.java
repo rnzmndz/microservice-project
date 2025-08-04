@@ -17,7 +17,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Configuration
-@Profile("default")
+@Profile({"default", "docker"})
 @EnableWebSecurity
 public class SecurityConfig {
 
