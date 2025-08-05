@@ -19,15 +19,17 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain filterChain(ServerHttpSecurity http) {
         http
-                .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers("/public/**").permitAll()
-                        .pathMatchers("/auth/**").permitAll()
-                        .pathMatchers("/webjars/swagger-ui/**", "/api-docs/**").permitAll()
-                        .pathMatchers(HttpMethod.GET, "/employee-service/v3/api-docs").permitAll()
-                        .anyExchange().authenticated()
-                )
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+            .cors(cors -> {}) // Enable CORS
+            .csrf(ServerHttpSecurity.CsrfSpec::disable) // Disable CSRF
+            .authorizeExchange(exchanges -> exchanges
+                .pathMatchers("/public/**", "/auth/**", "/webjars/swagger-ui/**", "/api-docs/**").permitAll()
+                .pathMatchers(HttpMethod.GET, "/employee-service/v3/api-docs").permitAll()
+                .anyExchange().authenticated()
+            )
+            .oauth2ResourceServer(oauth2 -> oauth2
+                .jwt(Customizer.withDefaults())
+            );
+
         return http.build();
     }
 
