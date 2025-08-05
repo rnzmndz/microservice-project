@@ -3,6 +3,7 @@ package com.renzo.api_gateway.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -31,14 +32,15 @@ public class SecurityConfig {
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(Customizer.withDefaults())
-                        .authenticationEntryPoint((exchange, ex) -> {
+                        .authenticationEntryPoint((exchange, ex) -> { //recently added
+                            // Add CORS headers on 401
                             ServerHttpResponse response = exchange.getResponse();
                             response.setStatusCode(HttpStatus.UNAUTHORIZED);
-
-                            // Add CORS headers even on error
-                            response.getHeaders().add("Access-Control-Allow-Origin", "http://localhost:4200");
-                            response.getHeaders().add("Access-Control-Allow-Credentials", "true");
-
+                            HttpHeaders headers = response.getHeaders();
+                            headers.add("Access-Control-Allow-Origin", "http://localhost:4200");
+                            headers.add("Access-Control-Allow-Credentials", "true");
+                            headers.add("Access-Control-Allow-Headers", "*");
+                            headers.add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
                             return response.setComplete();
                         })
                 );
