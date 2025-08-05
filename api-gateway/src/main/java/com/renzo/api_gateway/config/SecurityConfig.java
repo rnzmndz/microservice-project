@@ -24,6 +24,7 @@ public class SecurityConfig {
                 .cors(cors -> {}) // Enable CORS
                 .csrf(ServerHttpSecurity.CsrfSpec::disable) // Disable CSRF
                 .authorizeExchange(exchanges -> exchanges
+                        .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll() //recently added
                         .pathMatchers("/public/**", "/auth/**", "/webjars/swagger-ui/**", "/api-docs/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/employee-service/v3/api-docs").permitAll()
                         .anyExchange().authenticated()
