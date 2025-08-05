@@ -27,7 +27,7 @@ public class SecurityConfig {
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll() //recently added
                         .pathMatchers("/public/**",
-                                "/auth/**", "/v3/api-docs/**",
+                                "/auth/**", "/api-docs/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/webjars/swagger-ui/**").permitAll()
