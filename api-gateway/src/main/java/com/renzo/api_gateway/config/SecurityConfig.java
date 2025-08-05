@@ -32,17 +32,26 @@ public class SecurityConfig {
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(Customizer.withDefaults())
-//                        .authenticationEntryPoint((exchange, ex) -> { //recently added
-//                            // Add CORS headers on 401
-//                            ServerHttpResponse response = exchange.getResponse();
-//                            response.setStatusCode(HttpStatus.UNAUTHORIZED);
-//                            HttpHeaders headers = response.getHeaders();
-//                            headers.add("Access-Control-Allow-Origin", "http://localhost:4200");
-//                            headers.add("Access-Control-Allow-Credentials", "true");
-//                            headers.add("Access-Control-Allow-Headers", "*");
-//                            headers.add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-//                            return response.setComplete();
-//                        })
+                        .authenticationEntryPoint((exchange, ex) -> {
+                            ServerHttpResponse response = exchange.getResponse();
+                            HttpHeaders headers = response.getHeaders();
+
+                            // ✅ Allow CORS on error responses
+                            headers.add("Access-Control-Allow-Origin", "http://localhost:4200");
+                            headers.add("Access-Control-Allow-Credentials", "true");
+                            headers.add("Access-Control-Allow-Headers", "*");
+                            headers.add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+
+                            // ✅ Set status to 401 if not already committed
+                            if (!response.isCommitted()) {
+                                response.setStatusCode(HttpStatus.UNAUTHORIZED);
+                            }
+
+                            // ✅ Log the error for debugging (optional)
+                            ex.printStackTrace();
+
+                            return response.setComplete();
+                        })
                 );
 
         return http.build();
