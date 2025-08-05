@@ -32,17 +32,17 @@ public class SecurityConfig {
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(Customizer.withDefaults())
-                        .authenticationEntryPoint((exchange, ex) -> { //recently added
-                            // Add CORS headers on 401
-                            ServerHttpResponse response = exchange.getResponse();
-                            response.setStatusCode(HttpStatus.UNAUTHORIZED);
-                            HttpHeaders headers = response.getHeaders();
-                            headers.add("Access-Control-Allow-Origin", "http://localhost:4200");
-                            headers.add("Access-Control-Allow-Credentials", "true");
-                            headers.add("Access-Control-Allow-Headers", "*");
-                            headers.add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-                            return response.setComplete();
-                        })
+//                        .authenticationEntryPoint((exchange, ex) -> { //recently added
+//                            // Add CORS headers on 401
+//                            ServerHttpResponse response = exchange.getResponse();
+//                            response.setStatusCode(HttpStatus.UNAUTHORIZED);
+//                            HttpHeaders headers = response.getHeaders();
+//                            headers.add("Access-Control-Allow-Origin", "http://localhost:4200");
+//                            headers.add("Access-Control-Allow-Credentials", "true");
+//                            headers.add("Access-Control-Allow-Headers", "*");
+//                            headers.add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+//                            return response.setComplete();
+//                        })
                 );
 
         return http.build();
