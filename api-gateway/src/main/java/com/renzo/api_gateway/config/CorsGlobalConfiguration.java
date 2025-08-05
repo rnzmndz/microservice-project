@@ -16,6 +16,8 @@ public class CorsGlobalConfiguration {
         config.setAllowedOrigins(List.of("http://localhost:4200", "http://37.60.230.21:8080"));
         config.setAllowedMethods(List.of("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
+        config.setExposedHeaders(List.of("Authorization", "Content-Type"));
+        config.setAllowedOriginPatterns(List.of("*"));
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
