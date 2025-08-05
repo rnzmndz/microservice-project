@@ -26,7 +26,11 @@ public class SecurityConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable) // Disable CSRF
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll() //recently added
-                        .pathMatchers("/public/**", "/auth/**", "/webjars/swagger-ui/**", "/api-docs/**").permitAll()
+                        .pathMatchers("/public/**",
+                                "/auth/**", "/v3/api-docs/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/webjars/swagger-ui/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/employee-service/v3/api-docs").permitAll()
                         .anyExchange().authenticated()
                 )
