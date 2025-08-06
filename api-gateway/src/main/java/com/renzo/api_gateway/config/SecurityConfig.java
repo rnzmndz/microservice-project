@@ -19,23 +19,23 @@ public class SecurityConfig {
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private String jwtIssuerUri;
 
-    @Bean
-    public SecurityWebFilterChain filterChain(ServerHttpSecurity http) {
-        http
-                .cors(Customizer.withDefaults())
-                .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll() //recently added
-                        .pathMatchers("/public/**",
-                                "/auth/**", "/v3/api-docs/**","/api-docs/**",
-                                "/swagger-ui.html",
-                                "/swagger-ui/**",
-                                "/webjars/swagger-ui/**").permitAll()
-                        .pathMatchers(HttpMethod.GET, "/employee-service/v3/api-docs").permitAll()
-                        .anyExchange().authenticated()
-                )
-                .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(Customizer.withDefaults())
+//    @Bean
+//    public SecurityWebFilterChain filterChain(ServerHttpSecurity http) {
+//        http
+//                .cors(Customizer.withDefaults())
+//                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+//                .authorizeExchange(exchanges -> exchanges
+//                        .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll() //recently added
+//                        .pathMatchers("/public/**",
+//                                "/auth/**", "/v3/api-docs/**","/api-docs/**",
+//                                "/swagger-ui.html",
+//                                "/swagger-ui/**",
+//                                "/webjars/swagger-ui/**").permitAll()
+//                        .pathMatchers(HttpMethod.GET, "/employee-service/v3/api-docs").permitAll()
+//                        .anyExchange().authenticated()
+//                )
+//                .oauth2ResourceServer(oauth2 -> oauth2
+//                        .jwt(Customizer.withDefaults())
 //                        .authenticationEntryPoint((exchange, ex) -> {
 //                            ServerHttpResponse response = exchange.getResponse();
 //                            HttpHeaders headers = response.getHeaders();
@@ -56,9 +56,20 @@ public class SecurityConfig {
 //
 //                            return response.setComplete();
 //                        })
-                );
+//                );
+//
+//        return http.build();
+//    }
 
-        return http.build();
+    @Bean
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+        return http
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .authorizeExchange(exchanges -> exchanges
+                        .pathMatchers("/public/**").permitAll()
+                        .anyExchange().authenticated()
+                )
+                .build();
     }
 
 

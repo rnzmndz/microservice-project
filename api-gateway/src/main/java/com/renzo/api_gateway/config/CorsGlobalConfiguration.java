@@ -26,13 +26,15 @@ public class CorsGlobalConfiguration {
 @Bean
 public CorsWebFilter corsWebFilter() {
     CorsConfiguration config = new CorsConfiguration();
-    config.addAllowedOrigin("*"); // Replace with specific domain in production
-    config.addAllowedMethod("*");
+    config.setAllowCredentials(true);
+    config.addAllowedOrigin("*"); // Or restrict to frontend domain
     config.addAllowedHeader("*");
+    config.addAllowedMethod("*");
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", config);
 
     return new CorsWebFilter(source);
 }
+
 }
