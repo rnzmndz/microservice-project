@@ -32,7 +32,7 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/webjars/swagger-ui/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/employee-service/v3/api-docs").permitAll()
-                        .anyExchange().permitAll()
+                        .anyExchange().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(Customizer.withDefaults())
