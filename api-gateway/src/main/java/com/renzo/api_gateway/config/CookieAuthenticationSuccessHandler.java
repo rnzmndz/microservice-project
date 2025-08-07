@@ -1,0 +1,57 @@
+package com.renzo.api_gateway.config;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.web.server.WebFilterExchange;
+import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
+
+import java.net.URI;
+import java.time.Duration;
+
+@Component
+public class CookieAuthenticationSuccessHandler implements ServerAuthenticationSuccessHandler {
+
+    private final ReactiveOAuth2AuthorizedClientService clientService;
+
+    public CookieAuthenticationSuccessHandler(ReactiveOAuth2AuthorizedClientService clientService) {
+        this.clientService = clientService;
+    }
+
+    @Override
+    public Mono<Void> onAuthenticationSuccess(WebFilterExchange webFilterExchange,
+                                              Authentication authentication) {
+
+        if (authentication instanceof OAuth2AuthenticationToken oauthToken) {
+            return clientService.loadAuthorizedClient(
+                    oauthToken.getAuthorizedClientRegistrationId(),
+                    oauthToken.getName()
+            ).flatMap(client -> {
+                String token = client.getAccessToken().getTokenValue();
+
+                ResponseCookie cookie = ResponseCookie.from("ACCESS_TOKEN", token)
+                        .httpOnly(true)
+                        .secure(true)
+                        .path("/")
+                        .maxAge(Duration.ofHours(1))
+                        .build();
+
+                ServerHttpResponse response = webFilterExchange.getExchange().getResponse();
+                response.addCookie(cookie);
+
+                // Redirect to frontend
+                response.setStatusCode(HttpStatus.FOUND);
+                response.getHeaders().setLocation(URI.create("http://localhost:4200/"));
+
+                return response.setComplete();
+            });
+        }
+
+        return Mono.empty();
+    }
+}
