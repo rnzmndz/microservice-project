@@ -32,11 +32,17 @@ public class CookieAuthenticationSuccessHandler implements ServerAuthenticationS
                     oauthToken.getAuthorizedClientRegistrationId(),
                     oauthToken.getName()
             ).flatMap(client -> {
+                if (client == null || client.getAccessToken() == null) {
+                    System.out.println("❌ No access token found in authorized client");
+                    return Mono.empty(); // Don't proceed if token is missing
+                }
+
                 String token = client.getAccessToken().getTokenValue();
+                System.out.println("✅ Access token retrieved: " + token);
 
                 ResponseCookie cookie = ResponseCookie.from("ACCESS_TOKEN", token)
                         .httpOnly(true)
-                        .secure(true)
+                        .secure(false)
                         .path("/")
                         .maxAge(Duration.ofHours(1))
                         .build();
