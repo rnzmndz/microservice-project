@@ -27,11 +27,17 @@ public class CookieAuthenticationSuccessHandler implements ServerAuthenticationS
     public Mono<Void> onAuthenticationSuccess(WebFilterExchange webFilterExchange,
                                               Authentication authentication) {
 
+        System.out.println("➡️ Handler triggered");
+
         if (authentication instanceof OAuth2AuthenticationToken oauthToken) {
+            System.out.println("✅ Detected OAuth2AuthenticationToken");
+
             return clientService.loadAuthorizedClient(
                     oauthToken.getAuthorizedClientRegistrationId(),
                     oauthToken.getName()
             ).flatMap(client -> {
+                System.out.println("➡️ Inside flatMap");
+
                 if (client == null || client.getAccessToken() == null) {
                     System.out.println("❌ No access token found in authorized client");
                     return Mono.empty(); // Don't proceed if token is missing
@@ -56,6 +62,8 @@ public class CookieAuthenticationSuccessHandler implements ServerAuthenticationS
 
                 return response.setComplete();
             });
+        } else {
+            System.out.println("❌ Not an OAuth2AuthenticationToken: " + authentication.getClass().getName());
         }
 
         return Mono.empty();
