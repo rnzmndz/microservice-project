@@ -91,7 +91,7 @@ public class KeycloakService {
 
             // 6. Add roles
             try {
-                String roleName = request.getRole().toLowerCase();
+                String roleName = request.getRole();
                 List<RoleRepresentation> roles =
                         Collections.singletonList(keycloak.realm(realm).roles().get(roleName).toRepresentation());
                 userResource.roles().realmLevel().add(roles);
