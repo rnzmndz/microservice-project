@@ -5,19 +5,22 @@ import com.renzo.auth_service.dto.RegisterRequest;
 import com.renzo.auth_service.dto.RegisterResponse;
 import com.renzo.auth_service.dto.TokenResponse;
 import com.renzo.auth_service.service.AuthService;
+import com.renzo.auth_service.service.KeycloakService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/auth")
@@ -25,6 +28,7 @@ import org.springframework.web.client.RestTemplate;
 public class AuthController {
 
     private final AuthService authService;
+    private final KeycloakService keycloakService;
 
     @Value("${keycloak.token-uri}")
     private String tokenUri;
@@ -68,4 +72,22 @@ public class AuthController {
         RegisterResponse response = authService.register(request);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/token")
+    public String getToken(@AuthenticationPrincipal Jwt jwt) {
+        return jwt.getTokenValue();
+    }
+
+    @GetMapping("/roles/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<String> getUserRoles(@PathVariable String userId){
+        return keycloakService.getUserRoles(userId);
+    }
+
+    @GetMapping("/roles/me")
+    public List<String> getUserMyRoles(@AuthenticationPrincipal Jwt jwt){
+        String userId = jwt.getClaim("sub");
+        return keycloakService.getUserRoles(userId);
+    }
+
 }

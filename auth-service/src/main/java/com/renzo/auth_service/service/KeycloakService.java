@@ -14,6 +14,7 @@ import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -121,5 +122,23 @@ public class KeycloakService {
         List<UserRepresentation> users = usersResource.search(email);
 
         return !users.isEmpty();
+    }
+
+    public List<String> getUserRoles(String userId) {
+        UserResource userResource = keycloak.realm(realm).users().get(userId);
+
+        List<String> roleNames = new ArrayList<>();
+
+        // Realm roles
+        userResource.roles().realmLevel().listAll()
+                .forEach(role -> roleNames.add(role.getName()));
+
+        // Client roles
+        keycloak.realm(realm).clients().findAll().forEach(client -> {
+            userResource.roles().clientLevel(client.getId()).listAll()
+                    .forEach(role -> roleNames.add(role.getName()));
+        });
+
+        return roleNames;
     }
 }
