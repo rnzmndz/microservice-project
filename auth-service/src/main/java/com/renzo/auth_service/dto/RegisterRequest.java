@@ -35,7 +35,7 @@ public class RegisterRequest {
     private String password;
 
     @NotBlank(message = "Role cannot be blank")
-    @Schema(description = "User role", example = "USER", allowableValues = {"USER", "ADMIN", "MANAGER"})
+    @Schema(description = "User role", example = "VIEW_EMPLOYEE_DETAIL", allowableValues = {"USER", "ADMIN", "MANAGER"})
     private String role;
 
     @Valid
