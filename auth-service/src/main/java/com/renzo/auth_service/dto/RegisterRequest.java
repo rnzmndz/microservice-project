@@ -31,7 +31,7 @@ public class RegisterRequest {
             regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$",
             message = "Password must contain at least one digit, one lowercase, one uppercase letter, one special character and no whitespace"
     )
-    @Schema(description = "User's password", example = "SecurePass123!", required = true)
+    @Schema(description = "User's password", example = "Password123", required = true)
     private String password;
 
     @NotBlank(message = "Role cannot be blank")
