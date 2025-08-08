@@ -38,7 +38,7 @@ public class CookieAuthenticationSuccessHandler implements ServerAuthenticationS
 
                 ResponseCookie cookie = ResponseCookie.from("ACCESS_TOKEN", token)
                         .httpOnly(true)
-                        .secure(true)
+                        .secure(false) // true if in production
                         .path("/")
                         .maxAge(Duration.ofHours(1))
                         .build();
