@@ -1,4 +1,4 @@
-package com.renzo.api_gateway.config;
+package com.renzo.api_gateway.service;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -38,7 +38,7 @@ public class CookieAuthenticationSuccessHandler implements ServerAuthenticationS
 
                 ResponseCookie cookie = ResponseCookie.from("ACCESS_TOKEN", token)
                         .httpOnly(true)
-                        .secure(false)
+                        .secure(true)
                         .path("/")
                         .maxAge(Duration.ofHours(1))
                         .build();
