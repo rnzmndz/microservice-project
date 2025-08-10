@@ -35,6 +35,6 @@ import java.util.List;
                  .url("http://host.docker.internal:8080")
                  .description("Docker Host through Gateway");
 
-         return new OpenAPI().servers(List.of(gateway, localhost, ipBased, docker));
+         return new OpenAPI().servers(List.of(localhost, gateway, ipBased, docker));
      }
  }
