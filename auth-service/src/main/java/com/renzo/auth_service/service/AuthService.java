@@ -5,12 +5,9 @@ import com.renzo.auth_service.dto.RegisterRequest;
 import com.renzo.auth_service.dto.RegisterResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.keycloak.representations.idm.RoleRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -27,7 +24,7 @@ public class AuthService {
     public RegisterResponse register(RegisterRequest request) {
         try {
             // Validate email doesn't already exist
-            if (keycloakService.isEmailExisting(request.getEmail())) {
+            if (keycloakService.isEmailExisting(request.getEmployeeCreateDto().getContactInformationDto().getEmail())) {
                 throw new RuntimeException("Email already exists");
             }
 
