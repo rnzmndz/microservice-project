@@ -52,7 +52,7 @@ public class KeycloakService {
             // 1. Create user representation with all required fields
             UserRepresentation userRep = new UserRepresentation();
             userRep.setUsername(request.getUsername());
-            userRep.setEmail(request.getEmail());
+            userRep.setEmail(request.getEmployeeCreateDto().getContactInformationDto().getEmail());
             userRep.setFirstName(request.getEmployeeCreateDto().getFirstName());
             userRep.setLastName(request.getEmployeeCreateDto().getLastName());
             userRep.setEnabled(true);

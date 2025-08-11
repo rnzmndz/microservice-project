@@ -20,11 +20,6 @@ public class RegisterRequest {
     @Schema(description = "Unique username for the account", example = "john_doe", required = true)
     private String username;
 
-    @NotBlank(message = "Email cannot be blank")
-    @Email(message = "Email should be valid")
-    @Schema(description = "User's email address", example = "john.doe@example.com", required = true)
-    private String email;
-
     @NotBlank(message = "Password cannot be blank")
     @Size(min = 8, max = 30, message = "Password must be between 8 and 30 characters")
     @Pattern(
