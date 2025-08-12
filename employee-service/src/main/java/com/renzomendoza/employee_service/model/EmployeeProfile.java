@@ -29,10 +29,13 @@ public class EmployeeProfile {
     private String firstName;
     private String middleName;
     private String lastName;
+    private String gender;
+    private String nameSuffix;
 
     private String jobTitle;
     private String imageUrl;
 
+    private String department;
     private LocalDate hiredDate;
     private LocalDate birthDate;
 

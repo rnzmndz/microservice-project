@@ -8,6 +8,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -50,4 +51,16 @@ public class EmployeeResponse {
 
     @Schema(description = "Employee's emergency contact information")
     private EmergencyContactDto emergencyContactDto;
+
+    @Schema(description = "Timestamp when employee was created", example = "2023-01-15T10:30:00")
+    private LocalDateTime createdAt;
+
+    @Schema(description = "Timestamp when employee was last updated", example = "2023-01-20T15:45:00")
+    private LocalDateTime updatedAt;
+
+    @Schema(description = "User who created the employee record", example = "admin@company.com")
+    private String createdBy;
+
+    @Schema(description = "User who last modified the employee record", example = "hr@company.com")
+    private String modifiedBy;
 }
