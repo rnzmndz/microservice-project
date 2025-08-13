@@ -18,8 +18,8 @@ public class EmergencyContact {
     @Column(name = "emergency_contact_last_name")
     private String lastName;
 
-    @Column(name = "emergency_contact_gender")
-    private String gender;
+    @Column(name = "emergency_contact_relationship")
+    private String relationship;
 
     @Column(name = "emergency_contact_phone_number")
     private String phoneNumber;
