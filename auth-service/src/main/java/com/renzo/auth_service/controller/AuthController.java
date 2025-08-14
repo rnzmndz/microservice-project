@@ -6,6 +6,8 @@ import com.renzo.auth_service.dto.RegisterResponse;
 import com.renzo.auth_service.dto.TokenResponse;
 import com.renzo.auth_service.service.AuthService;
 import com.renzo.auth_service.service.KeycloakService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -88,6 +90,19 @@ public class AuthController {
     public List<String> getUserMyRoles(@AuthenticationPrincipal Jwt jwt){
         String userId = jwt.getClaim("sub");
         return keycloakService.getUserRoles(userId);
+    }
+
+    @GetMapping("/callback")
+    public String authCallback(HttpServletResponse response, String token) {
+        Cookie cookie = new Cookie("access_token", token);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true); // only over HTTPS
+        cookie.setPath("/"); // available to entire app
+        cookie.setMaxAge(3600); // 1 hour
+        cookie.setAttribute("SameSite", "Strict"); // or "Lax"
+        response.addCookie(cookie);
+
+        return "Login successful";
     }
 
 }
