@@ -1,5 +1,6 @@
 package com.renzo.auth_service.dto.employee.employee;
 
+
 import com.renzo.auth_service.dto.employee.AddressDto;
 import com.renzo.auth_service.dto.employee.ContactInformationDto;
 import com.renzo.auth_service.dto.employee.EmergencyContactDto;
@@ -35,10 +36,22 @@ public class EmployeeCreateDto {
     @Schema(description = "Employee's last name", example = "Doe")
     private String lastName;
 
+    @Size(max = 10, message = "Name suffix must be less than 10 characters")
+    @Schema(description = "Employee's name suffix", example = "Jr.", nullable = true)
+    private String nameSuffix;
+
+    @Schema(description = "Employee's gender", example = "Male", nullable = true)
+    private String gender;
+
     @NotBlank(message = "Job title is required")
     @Size(max = 100, message = "Job title must be less than 100 characters")
     @Schema(description = "Employee's job title", example = "Software Engineer")
     private String jobTitle;
+
+    @NotBlank(message = "Department is required")
+    @Size(max = 100, message = "Department must be less than 100 characters")
+    @Schema(description = "Employee's department", example = "Engineering")
+    private String department;
 
     @Schema(description = "URL of employee's profile image", example = "https://example.com/profile.jpg", nullable = true)
     private String imageUrl;

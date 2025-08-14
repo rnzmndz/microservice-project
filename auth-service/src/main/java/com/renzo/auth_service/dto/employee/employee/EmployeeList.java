@@ -1,6 +1,8 @@
 package com.renzo.auth_service.dto.employee.employee;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.UUID;
@@ -27,6 +29,11 @@ public class EmployeeList {
 
     @Schema(description = "Employee's job title", example = "Software Engineer")
     private String jobTitle;
+
+    @NotBlank(message = "Department is required")
+    @Size(max = 100, message = "Department must be less than 100 characters")
+    @Schema(description = "Employee's department", example = "Engineering")
+    private String department;
 
     @Schema(description = "URL of employee's profile image", example = "https://example.com/profile.jpg", nullable = true)
     private String imageUrl;
