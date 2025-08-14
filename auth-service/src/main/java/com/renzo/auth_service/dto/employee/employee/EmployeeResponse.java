@@ -24,14 +24,23 @@ public class EmployeeResponse {
     @Schema(description = "Employee's first name", example = "John")
     private String firstName;
 
-    @Schema(description = "Employee's middle name", example = "Michael", nullable = true)
+    @Schema(description = "Employee's middle name", example = "Michael")
     private String middleName;
 
     @Schema(description = "Employee's last name", example = "Doe")
     private String lastName;
 
+    @Schema(description = "Employee's name suffix", example = "Jr.")
+    private String nameSuffix;
+
+    @Schema(description = "Employee's gender", example = "Male")
+    private String gender;
+
     @Schema(description = "Employee's job title", example = "Software Engineer")
     private String jobTitle;
+
+    @Schema(description = "Employee's department", example = "Engineering")
+    private String department;
 
     @Schema(description = "URL of employee's profile image", example = "https://example.com/profile.jpg", nullable = true)
     private String imageUrl;

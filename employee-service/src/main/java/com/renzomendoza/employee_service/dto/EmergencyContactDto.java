@@ -24,9 +24,10 @@ public class EmergencyContactDto {
     @Schema(description = "Emergency contact's last name", example = "Doe")
     private String lastName;
 
-    @Size(max = 50, message = "Emergency contact gender must be less than 50 characters")
-    @Schema(description = "Gender of the emergency contact", example = "Female", nullable = true)
-    private String emergencyContactGender;
+    @NotBlank(message = "Relationship is required")
+    @Size(max = 50, message = "Relationship must be less than 50 characters")
+    @Schema(description = "Emergency contact's relationship to the patient", example = "Spouse")
+    private String relationship;
 
     @NotBlank(message = "Phone number is required")
     @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "Invalid phone number format")
