@@ -21,9 +21,7 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/webjars/swagger-ui/**",
-                                "/auth/login",
-                                "/auth/register",
-                                "/auth/callback"
+                                "/auth/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 );
