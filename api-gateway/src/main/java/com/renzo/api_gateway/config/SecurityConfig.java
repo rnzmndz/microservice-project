@@ -60,19 +60,27 @@ public class SecurityConfig {
 
     @Bean
     public GlobalFilter forwardUserClaimsFilter() {
-        return (exchange, chain) -> exchange.getPrincipal()
-                .flatMap(principal -> {
-                    if (principal instanceof JwtAuthenticationToken jwtAuth) {
-                        Jwt jwt = jwtAuth.getToken();
-                        ServerWebExchange mutatedExchange = exchange.mutate().request(r -> r.headers(headers -> {
-                            headers.add("X-User-Id", jwt.getClaimAsString("sub"));
-                            headers.add("X-User-Roles", String.join(",", jwt.getClaimAsStringList("roles")));
-                        })).build();
-                        return chain.filter(mutatedExchange);
-                    }
-                    return chain.filter(exchange);
-                });
+        return (exchange, chain) -> {
+            String path = exchange.getRequest().getURI().getPath();
+            if (path.startsWith("/v3/api-docs") || path.startsWith("/swagger-ui") || path.startsWith("/webjars/swagger-ui")) {
+                return chain.filter(exchange);
+            }
+
+            return exchange.getPrincipal()
+                    .flatMap(principal -> {
+                        if (principal instanceof JwtAuthenticationToken jwtAuth) {
+                            Jwt jwt = jwtAuth.getToken();
+                            ServerWebExchange mutatedExchange = exchange.mutate().request(r -> r.headers(headers -> {
+                                headers.add("X-User-Id", jwt.getClaimAsString("sub"));
+                                headers.add("X-User-Roles", String.join(",", jwt.getClaimAsStringList("roles")));
+                            })).build();
+                            return chain.filter(mutatedExchange);
+                        }
+                        return chain.filter(exchange);
+                    });
+        };
     }
+
 
 
 }
