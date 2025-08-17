@@ -1,7 +1,9 @@
 package com.renzo.auth_service.config;
 
 import com.renzo.auth_service.utils.NetworkUtils;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.servers.Server;
@@ -11,6 +13,11 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 
+@OpenAPIDefinition(
+        security = {
+                @SecurityRequirement(name = "bearerAuth")
+        }
+)
  @Configuration
  @SecurityScheme(
          name = "bearerAuth",
