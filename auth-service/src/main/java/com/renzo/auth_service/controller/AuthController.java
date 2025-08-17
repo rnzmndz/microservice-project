@@ -87,21 +87,11 @@ public class AuthController {
         return keycloakService.getUserRoles(userId);
     }
 
-//    @GetMapping("/roles/me")
-//    public List<String> getUserMyRoles(@AuthenticationPrincipal Jwt jwt){
-//        String userId = jwt.getClaim("sub");
-//        return keycloakService.getUserRoles(userId);
-//    }
-
     @GetMapping("/roles/me")
-    public Object getUserMyRoles(@AuthenticationPrincipal Jwt jwt,
-                                 @RequestHeader Map<String, String> headers) {
-        return Map.of(
-                "jwt", jwt == null ? "NULL" : jwt.getClaims(),
-                "authHeader", headers.get("authorization")
-        );
+    public List<String> getUserMyRoles(@AuthenticationPrincipal Jwt jwt){
+        String userId = jwt.getClaim("sub");
+        return keycloakService.getUserRoles(userId);
     }
-
 
     @GetMapping("/callback")
     public String authCallback(HttpServletResponse response, String token) {

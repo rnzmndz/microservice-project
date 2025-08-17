@@ -18,13 +18,13 @@ import java.util.List;
                 @SecurityRequirement(name = "bearerAuth")
         }
 )
- @Configuration
- @SecurityScheme(
-         name = "bearerAuth",
-         type = SecuritySchemeType.HTTP,
-         bearerFormat = "JWT",
-         scheme = "bearer"
- )
+@Configuration
+@SecurityScheme(
+        name = "bearerAuth",
+        type = SecuritySchemeType.HTTP,
+        bearerFormat = "JWT",
+        scheme = "bearer"
+)
  public class OpenApiConfig {
 
      @Value("${services.api-gateway.url:http://api-gateway:8080}")
