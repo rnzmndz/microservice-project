@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -86,11 +87,21 @@ public class AuthController {
         return keycloakService.getUserRoles(userId);
     }
 
+//    @GetMapping("/roles/me")
+//    public List<String> getUserMyRoles(@AuthenticationPrincipal Jwt jwt){
+//        String userId = jwt.getClaim("sub");
+//        return keycloakService.getUserRoles(userId);
+//    }
+
     @GetMapping("/roles/me")
-    public List<String> getUserMyRoles(@AuthenticationPrincipal Jwt jwt){
-        String userId = jwt.getClaim("sub");
-        return keycloakService.getUserRoles(userId);
+    public Object getUserMyRoles(@AuthenticationPrincipal Jwt jwt,
+                                 @RequestHeader Map<String, String> headers) {
+        return Map.of(
+                "jwt", jwt == null ? "NULL" : jwt.getClaims(),
+                "authHeader", headers.get("authorization")
+        );
     }
+
 
     @GetMapping("/callback")
     public String authCallback(HttpServletResponse response, String token) {
