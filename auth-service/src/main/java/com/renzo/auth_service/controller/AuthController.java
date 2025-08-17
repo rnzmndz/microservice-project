@@ -93,6 +93,17 @@ public class AuthController {
         return keycloakService.getUserRoles(userId);
     }
 
+    @GetMapping("/user-info")
+    public Map<String, Object> getUserInfo(@AuthenticationPrincipal Jwt jwt) {
+        return Map.of(
+                "userId", jwt.getClaim("sub"),
+                "username", jwt.getClaim("preferred_username"),
+                "fullName", jwt.getClaim("name"),
+                "firstName", jwt.getClaim("given_name"),
+                "lastName", jwt.getClaim("family_name"),
+                "email", jwt.getClaim("email")
+        );
+    }
     @GetMapping("/callback")
     public String authCallback(HttpServletResponse response, String token) {
         Cookie cookie = new Cookie("access_token", token);
