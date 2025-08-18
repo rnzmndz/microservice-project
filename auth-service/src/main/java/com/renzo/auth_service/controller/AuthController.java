@@ -7,6 +7,7 @@ import com.renzo.auth_service.dto.TokenResponse;
 import com.renzo.auth_service.service.AuthService;
 import com.renzo.auth_service.service.KeycloakService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -207,6 +208,12 @@ public class AuthController {
                 .header(HttpHeaders.SET_COOKIE, deleteAccess.toString())
                 .header(HttpHeaders.SET_COOKIE, deleteRefresh.toString())
                 .build();
+    }
+
+    @GetMapping("/session")
+    public ResponseEntity<?> checkSession(HttpServletRequest request) {
+        // If JWT is valid, return user info or just authenticated = true
+        return ResponseEntity.ok(Map.of("authenticated", true));
     }
 
 }
