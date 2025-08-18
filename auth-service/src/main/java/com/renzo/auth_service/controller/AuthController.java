@@ -115,7 +115,7 @@ public class AuthController {
     }
 
     @GetMapping("/roles/me")
-    public List<String> getUserMyRoles(@AuthenticationPrincipal Jwt jwt){
+    public List<String> getMyUserRoles(@AuthenticationPrincipal Jwt jwt){
         String userId = jwt.getClaim("sub");
         return keycloakService.getUserRoles(userId);
     }
