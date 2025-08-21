@@ -26,7 +26,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityWebFilterChain filterChain(ServerHttpSecurity http) {
+    public SecurityWebFilterChain filterChain(ServerHttpSecurity http,
+                                              CookieAuthenticationSuccessHandler successHandler) {
         http
                 .cors(Customizer.withDefaults())
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
