@@ -12,12 +12,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 
 @RestController
@@ -117,16 +120,19 @@ public class AuthController {
     }
 
     @GetMapping("/user-info")
-    public AccountDetails getAccountDetails(@AuthenticationPrincipal Jwt jwt) {
-        return AccountDetails.builder()
-                .userId(jwt.getClaim("sub"))
-                .username(jwt.getClaim("preferred_username"))
-                .fullName(jwt.getClaim("name"))
-                .firstName(jwt.getClaim("given_name"))
-                .lastName(jwt.getClaim("family_name"))
-                .email(jwt.getClaim("email"))
-                .build();
-
+    public AccountDetails getAccountDetails(Authentication authentication) {
+        if (authentication instanceof JwtAuthenticationToken jwtAuth) {
+            Jwt jwt = jwtAuth.getToken();
+            return AccountDetails.builder()
+                    .userId(jwt.getClaim("sub"))
+                    .username(jwt.getClaim("preferred_username"))
+                    .fullName(jwt.getClaim("name"))
+                    .firstName(jwt.getClaim("given_name"))
+                    .lastName(jwt.getClaim("family_name"))
+                    .email(jwt.getClaim("email"))
+                    .build();
+        }
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No JWT found in security context");
     }
 //    @GetMapping("/callback")
 //    public String authCallback(HttpServletResponse response, String token) {
