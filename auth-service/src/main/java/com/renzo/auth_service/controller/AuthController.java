@@ -1,14 +1,9 @@
 package com.renzo.auth_service.controller;
 
-import com.renzo.auth_service.dto.AuthRequest;
-import com.renzo.auth_service.dto.RegisterRequest;
-import com.renzo.auth_service.dto.RegisterResponse;
-import com.renzo.auth_service.dto.TokenResponse;
+import com.renzo.auth_service.dto.*;
 import com.renzo.auth_service.service.AuthService;
 import com.renzo.auth_service.service.KeycloakService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -121,15 +116,16 @@ public class AuthController {
     }
 
     @GetMapping("/user-info")
-    public Map<String, Object> getUserInfo(@AuthenticationPrincipal Jwt jwt) {
-        return Map.of(
-                "userId", jwt.getClaim("sub"),
-                "username", jwt.getClaim("preferred_username"),
-                "fullName", jwt.getClaim("name"),
-                "firstName", jwt.getClaim("given_name"),
-                "lastName", jwt.getClaim("family_name"),
-                "email", jwt.getClaim("email")
-        );
+    public AccountDetails getUserInfo(@AuthenticationPrincipal Jwt jwt) {
+        return AccountDetails.builder()
+                .userId(jwt.getClaim("sub"))
+                .username(jwt.getClaim("preferred_username"))
+                .fullName(jwt.getClaim("name"))
+                .firstName(jwt.getClaim("given_name"))
+                .lastName(jwt.getClaim("family_name"))
+                .email(jwt.getClaim("email"))
+                .build();
+
     }
 //    @GetMapping("/callback")
 //    public String authCallback(HttpServletResponse response, String token) {
