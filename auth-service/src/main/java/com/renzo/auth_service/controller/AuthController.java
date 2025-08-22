@@ -114,9 +114,13 @@ public class AuthController {
     }
 
     @GetMapping("/roles/me")
-    public List<String> getMyUserRoles(@AuthenticationPrincipal Jwt jwt){
-        String userId = jwt.getClaim("sub");
-        return keycloakService.getUserRoles(userId);
+    public List<String> getMyUserRoles(Authentication authentication){
+        if (authentication instanceof JwtAuthenticationToken jwtAuth) {
+            Jwt jwt = jwtAuth.getToken();
+            String userId = jwt.getClaim("sub");
+            return keycloakService.getUserRoles(userId);
+        }
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No JWT found in security context");
     }
 
     @GetMapping("/user-info")
