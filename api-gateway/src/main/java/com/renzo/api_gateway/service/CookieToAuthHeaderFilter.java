@@ -14,7 +14,7 @@ public class CookieToAuthHeaderFilter implements WebFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return SecurityWebFiltersOrder.AUTHENTICATION.getOrder() - 1;
+        return Ordered.HIGHEST_PRECEDENCE;
     }
 
     @Override
@@ -28,12 +28,9 @@ public class CookieToAuthHeaderFilter implements WebFilter, Ordered {
             exchange = exchange.mutate()
                     .request(r -> r.headers(h -> h.setBearerAuth(token)))
                     .build();
-        }
 
-        if (accessCookie != null) {
-            System.out.println("ACCESS_TOKEN found: " + accessCookie.getValue());
-        } else {
-            System.out.println("No ACCESS_TOKEN cookie");
+            exchange.getRequest().getHeaders().forEach((k,v) -> System.out.println(k + " = " + v));
+
         }
 
 
