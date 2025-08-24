@@ -29,8 +29,6 @@ public class CookieToAuthHeaderFilter implements WebFilter, Ordered {
                     .request(r -> r.headers(h -> h.setBearerAuth(token)))
                     .build();
 
-            exchange.getRequest().getHeaders().forEach((k,v) -> System.out.println(k + " = " + v));
-
         }
 
 
