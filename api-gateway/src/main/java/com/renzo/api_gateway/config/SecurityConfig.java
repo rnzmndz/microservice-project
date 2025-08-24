@@ -1,6 +1,5 @@
 package com.renzo.api_gateway.config;
 
-import com.renzo.api_gateway.service.CookieAuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,33 +15,29 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @EnableWebFluxSecurity
 public class SecurityConfig {
 
-    private final CookieAuthenticationSuccessHandler successHandler;
-
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private String jwtIssuerUri;
 
-    public SecurityConfig (CookieAuthenticationSuccessHandler successHandler){
-        this.successHandler = successHandler;
-    }
-
     @Bean
-    public SecurityWebFilterChain filterChain(ServerHttpSecurity http,
-                                              CookieAuthenticationSuccessHandler successHandler) {
+    public SecurityWebFilterChain filterChain(ServerHttpSecurity http) {
         http
                 .cors(Customizer.withDefaults())
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll() //recently added
-                        .pathMatchers("/public/**",
-                                "/auth/**", "/v3/api-docs/**","/api-docs/**",
+                        .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .pathMatchers(
+                                "/public/**",
+                                "/auth/**",
+                                "/v3/api-docs/**", "/api-docs/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
-                                "/webjars/swagger-ui/**").permitAll()
+                                "/webjars/swagger-ui/**"
+                        ).permitAll()
                         .pathMatchers(HttpMethod.GET, "/employee-service/v3/api-docs").permitAll()
                         .anyExchange().authenticated()
                 )
-                .oauth2Login(oauth2 -> oauth2
-                        .authenticationSuccessHandler(successHandler));
+                // ✅ modern way, no deprecation
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
 
         return http.build();
     }
@@ -51,5 +46,4 @@ public class SecurityConfig {
     public ReactiveJwtDecoder jwtDecoder() {
         return ReactiveJwtDecoders.fromIssuerLocation(jwtIssuerUri);
     }
-
 }
