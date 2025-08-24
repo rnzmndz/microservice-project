@@ -1,6 +1,9 @@
 package com.renzomendoza.employee_service.controller;
 
-import com.renzomendoza.employee_service.dto.*;
+import com.renzomendoza.employee_service.dto.AddressDto;
+import com.renzomendoza.employee_service.dto.ContactInformationDto;
+import com.renzomendoza.employee_service.dto.EmergencyContactDto;
+import com.renzomendoza.employee_service.dto.EmployeePage;
 import com.renzomendoza.employee_service.dto.employee.EmployeeCreateDto;
 import com.renzomendoza.employee_service.dto.employee.EmployeeList;
 import com.renzomendoza.employee_service.dto.employee.EmployeeRequestDto;
@@ -61,17 +64,18 @@ public class EmployeeController {
     @Operation(summary = "Get all employees", description = "Returns a paginated list of all employees")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list",
-                    content = @Content(schema = @Schema(implementation = Page.class)))
+                    content = @Content(schema = @Schema(implementation = EmployeePage.class)))
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<EmployeeList>> getAllEmployees(
+    public ResponseEntity<EmployeePage> getAllEmployees(
             @Parameter(description = "Page number (0-based)", example = "0")
             @RequestParam(defaultValue = "0") int page,
 
             @Parameter(description = "Number of items per page", example = "10")
             @RequestParam(defaultValue = "10") int size) {
+
         Page<EmployeeList> employees = employeeService.getAllEmployees(page, size);
-        return ResponseEntity.ok(employees);
+        return ResponseEntity.ok(new EmployeePage(employees.getContent(), employees.getPageable(), employees.getTotalElements()));
     }
 
     @Operation(summary = "Get sorted employees", description = "Returns a paginated and sorted list of employees")
