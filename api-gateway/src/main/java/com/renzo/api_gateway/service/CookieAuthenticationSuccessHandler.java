@@ -88,8 +88,8 @@ public class CookieAuthenticationSuccessHandler implements ServerAuthenticationS
                 // ACCESS cookie
                 ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", accessToken)
                         .httpOnly(true)
-                        .secure(false) // true in prod
-                        .sameSite("Strict")
+                        .secure(false) // Set true if prod
+                        .sameSite("None") // Set Strict if prod
                         .path("/")
                         .maxAge(Duration.ofMinutes(15))
                         .build();

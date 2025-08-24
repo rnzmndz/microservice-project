@@ -179,8 +179,8 @@ public class AuthController {
 
             ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", tokenResponse.getAccess_token())
                     .httpOnly(true)
-                    .secure(true)
-                    .sameSite("Strict")
+                    .secure(false) // Set true if prod
+                    .sameSite("None") // Set Strict if prod
                     .path("/")
                     .maxAge(Duration.ofMinutes(15))
                     .build();
@@ -197,16 +197,16 @@ public class AuthController {
     public ResponseEntity<Void> logout() {
         ResponseCookie deleteAccess = ResponseCookie.from("ACCESS_TOKEN", "")
                 .httpOnly(true)
-                .secure(true)
-                .sameSite("Strict")
+                .secure(false) // Set true if prod
+                .sameSite("None") // Set Strict if prod
                 .path("/")
                 .maxAge(0)
                 .build();
 
         ResponseCookie deleteRefresh = ResponseCookie.from("REFRESH_TOKEN", "")
                 .httpOnly(true)
-                .secure(true)
-                .sameSite("Strict")
+                .secure(false) // Set true if prod
+                .sameSite("None") // Set Strict if prod
                 .path("/")
                 .maxAge(0)
                 .build();
