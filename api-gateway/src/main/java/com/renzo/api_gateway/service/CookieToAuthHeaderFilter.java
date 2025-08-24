@@ -30,6 +30,13 @@ public class CookieToAuthHeaderFilter implements WebFilter, Ordered {
                     .build();
         }
 
+        if (accessCookie != null) {
+            System.out.println("ACCESS_TOKEN found: " + accessCookie.getValue());
+        } else {
+            System.out.println("No ACCESS_TOKEN cookie");
+        }
+
+
         return chain.filter(exchange);
     }
 }
