@@ -27,7 +27,7 @@ public class SecurityConfig {
                         .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .pathMatchers(
                                 "/public/**",
-                                "/auth/**",
+                                "/auth/login", "/auth/register", "/auth/refresh",
                                 "/v3/api-docs/**", "/api-docs/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",

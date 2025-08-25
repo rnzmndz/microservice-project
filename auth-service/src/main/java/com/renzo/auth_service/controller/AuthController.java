@@ -138,18 +138,6 @@ public class AuthController {
         }
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No JWT found in security context");
     }
-//    @GetMapping("/callback")
-//    public String authCallback(HttpServletResponse response, String token) {
-//        Cookie cookie = new Cookie("access_token", token);
-//        cookie.setHttpOnly(true);
-//        cookie.setSecure(true); // only over HTTPS
-//        cookie.setPath("/"); // available to entire app
-//        cookie.setMaxAge(3600); // 1 hour
-//        cookie.setAttribute("SameSite", "Strict"); // or "Lax"
-//        response.addCookie(cookie);
-//
-//        return "Login successful";
-//    }
 
     @PostMapping("/refresh")
     public ResponseEntity<Void> refreshToken(@CookieValue(name = "REFRESH_TOKEN", required = false) String refreshToken) {
