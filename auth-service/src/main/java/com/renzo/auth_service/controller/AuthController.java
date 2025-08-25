@@ -75,7 +75,7 @@ public class AuthController {
                     .secure(true) // set false if testing locally on http
                     .sameSite("Strict")
                     .path("/")
-                    .maxAge(Duration.ofMinutes(15))
+                    .maxAge(Duration.ofMinutes(2))
                     .build();
 
             ResponseCookie refreshCookie = ResponseCookie.from("REFRESH_TOKEN", tokenResponse.getRefresh_token())
@@ -170,7 +170,7 @@ public class AuthController {
                     .secure(false) // Set true if prod
                     .sameSite("None") // Set Strict if prod
                     .path("/")
-                    .maxAge(Duration.ofMinutes(15))
+                    .maxAge(Duration.ofMinutes(2))
                     .build();
 
             return ResponseEntity.ok()

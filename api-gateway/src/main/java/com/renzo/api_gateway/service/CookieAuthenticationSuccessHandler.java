@@ -91,7 +91,7 @@ public class CookieAuthenticationSuccessHandler implements ServerAuthenticationS
                         .secure(false) // Set true if prod
                         .sameSite("None") // Set Strict if prod
                         .path("/")
-                        .maxAge(Duration.ofMinutes(15))
+                        .maxAge(Duration.ofMinutes(2))
                         .build();
 
                 response.addCookie(accessCookie);
