@@ -2,10 +2,7 @@ package com.renzo.auth_service.controller;
 
 import com.renzo.auth_service.dto.*;
 import com.renzo.auth_service.service.AuthService;
-import com.renzo.auth_service.service.CookieConfig;
 import com.renzo.auth_service.service.KeycloakService;
-import com.renzo.auth_service.service.TokenService;
-import com.renzo.auth_service.utils.AuthUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import java.util.List;
@@ -33,23 +30,61 @@ public class AuthController {
 
     private final AuthService authService;
     private final KeycloakService keycloakService;
-    private final TokenService tokenService;
-    private final CookieConfig cookieConfig;
+
+    @Value("${keycloak.token-uri}")
+    private String tokenUri;
+
+    @Value("${keycloak.client-id}")
+    private String clientId;
+
+    @Value("${keycloak.client-secret}")
+    private String clientSecret;
+
+    private final RestTemplate restTemplate = new RestTemplate();
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TokenResponse> login(@RequestBody AuthRequest request) {
-        MultiValueMap<String, String> formData = tokenService.buildPasswordGrantForm(
-                request.getUsername(),
-                request.getPassword()
+        // Build form data
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        formData.add("grant_type", "password");
+        formData.add("client_id", clientId);
+        formData.add("client_secret", clientSecret);
+        formData.add("username", request.getUsername());
+        formData.add("password", request.getPassword());
+        formData.add("scope", "openid email profile");
+
+        // Build request entity
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(formData, headers);
+
+        // Send the request
+        ResponseEntity<TokenResponse> response = restTemplate.postForEntity(
+                tokenUri,
+                httpEntity,
+                TokenResponse.class
         );
 
-        ResponseEntity<TokenResponse> response = tokenService.requestToken(formData);
-
+        // Recently Added Under Observation we can delete this block if this wont work
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
             TokenResponse tokenResponse = response.getBody();
 
-            ResponseCookie accessCookie = cookieConfig.createAccessCookie(tokenResponse.getAccess_token());
-            ResponseCookie refreshCookie = cookieConfig.createRefreshCookie(tokenResponse.getRefresh_token());
+            // Create secure HttpOnly cookies
+            ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", tokenResponse.getAccess_token())
+                    .httpOnly(true)
+                    .secure(true) // set false if testing locally on http
+                    .sameSite("Strict")
+                    .path("/")
+                    .maxAge(Duration.ofMinutes(15))
+                    .build();
+
+            ResponseCookie refreshCookie = ResponseCookie.from("REFRESH_TOKEN", tokenResponse.getRefresh_token())
+                    .httpOnly(true)
+                    .secure(true) // set false if testing locally on http
+                    .sameSite("Strict")
+                    .path("/")
+                    .maxAge(Duration.ofDays(7))
+                    .build();
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, accessCookie.toString())
@@ -57,6 +92,7 @@ public class AuthController {
                     .build();
         }
 
+//        return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
@@ -78,23 +114,29 @@ public class AuthController {
     }
 
     @GetMapping("/roles/me")
-    public List<String> getMyUserRoles(Authentication authentication) {
-        String userId = AuthUtils.extractUserId(authentication);
-        return keycloakService.getUserRoles(userId);
+    public List<String> getMyUserRoles(Authentication authentication){
+        if (authentication instanceof JwtAuthenticationToken jwtAuth) {
+            Jwt jwt = jwtAuth.getToken();
+            String userId = jwt.getClaim("sub");
+            return keycloakService.getUserRoles(userId);
+        }
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No JWT found in security context");
     }
 
     @GetMapping("/user-info")
     public AccountDetails getAccountDetails(Authentication authentication) {
-        Jwt jwt = AuthUtils.extractJwt(authentication);
-
-        return AccountDetails.builder()
-                .userId(jwt.getClaim("sub"))
-                .username(jwt.getClaim("preferred_username"))
-                .fullName(jwt.getClaim("name"))
-                .firstName(jwt.getClaim("given_name"))
-                .lastName(jwt.getClaim("family_name"))
-                .email(jwt.getClaim("email"))
-                .build();
+        if (authentication instanceof JwtAuthenticationToken jwtAuth) {
+            Jwt jwt = jwtAuth.getToken();
+            return AccountDetails.builder()
+                    .userId(jwt.getClaim("sub"))
+                    .username(jwt.getClaim("preferred_username"))
+                    .fullName(jwt.getClaim("name"))
+                    .firstName(jwt.getClaim("given_name"))
+                    .lastName(jwt.getClaim("family_name"))
+                    .email(jwt.getClaim("email"))
+                    .build();
+        }
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No JWT found in security context");
     }
 //    @GetMapping("/callback")
 //    public String authCallback(HttpServletResponse response, String token) {
@@ -115,12 +157,33 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        MultiValueMap<String, String> formData = tokenService.buildRefreshGrantForm(refreshToken);
-        ResponseEntity<TokenResponse> response = tokenService.requestToken(formData);
+        // Prepare form data
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        formData.add("grant_type", "refresh_token");
+        formData.add("client_id", clientId);
+        formData.add("client_secret", clientSecret);
+        formData.add("refresh_token", refreshToken);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(formData, headers);
+
+        ResponseEntity<TokenResponse> response = restTemplate.postForEntity(
+                tokenUri,
+                httpEntity,
+                TokenResponse.class
+        );
 
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
             TokenResponse tokenResponse = response.getBody();
-            ResponseCookie accessCookie = cookieConfig.createAccessCookie(tokenResponse.getAccess_token());
+
+            ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", tokenResponse.getAccess_token())
+                    .httpOnly(true)
+                    .secure(false) // Set true if prod
+                    .sameSite("None") // Set Strict if prod
+                    .path("/")
+                    .maxAge(Duration.ofMinutes(15))
+                    .build();
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, accessCookie.toString())
@@ -132,8 +195,21 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout() {
-        ResponseCookie deleteAccess = cookieConfig.createExpiredCookie("ACCESS_TOKEN");
-        ResponseCookie deleteRefresh = cookieConfig.createExpiredCookie("REFRESH_TOKEN");
+        ResponseCookie deleteAccess = ResponseCookie.from("ACCESS_TOKEN", "")
+                .httpOnly(true)
+                .secure(false) // Set true if prod
+                .sameSite("None") // Set Strict if prod
+                .path("/")
+                .maxAge(0)
+                .build();
+
+        ResponseCookie deleteRefresh = ResponseCookie.from("REFRESH_TOKEN", "")
+                .httpOnly(true)
+                .secure(false) // Set true if prod
+                .sameSite("None") // Set Strict if prod
+                .path("/")
+                .maxAge(0)
+                .build();
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, deleteAccess.toString())
@@ -143,6 +219,7 @@ public class AuthController {
 
     @GetMapping("/session")
     public ResponseEntity<?> checkSession(HttpServletRequest request) {
+        // If JWT is valid, return user info or just authenticated = true
         return ResponseEntity.ok(Map.of("authenticated", true));
     }
 
