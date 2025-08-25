@@ -168,7 +168,8 @@ public class AuthController {
             ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", tokenResponse.getAccess_token())
                     .httpOnly(true)
                     .secure(false) // Set true if prod
-                    .sameSite("None") // Set Strict if prod
+//                    .sameSite("None") // Set Strict if prod
+                    .sameSite("Lax") // for dev mode
                     .path("/")
                     .maxAge(Duration.ofMinutes(2))
                     .build();
