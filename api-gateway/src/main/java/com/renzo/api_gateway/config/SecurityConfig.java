@@ -62,10 +62,14 @@ public class SecurityConfig {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
+            response.getHeaders().add("Access-Control-Allow-Origin", "http://localhost:4200");
+            response.getHeaders().add("Access-Control-Allow-Credentials", "true");
+
             byte[] bytes = "{\"error\": \"Unauthorized\"}".getBytes(StandardCharsets.UTF_8);
             var buffer = response.bufferFactory().wrap(bytes);
 
             return response.writeWith(Mono.just(buffer));
         };
     }
+
 }
