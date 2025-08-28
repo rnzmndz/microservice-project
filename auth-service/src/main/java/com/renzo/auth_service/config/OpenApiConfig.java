@@ -38,6 +38,10 @@ import java.util.List;
      public OpenAPI customOpenAPI() {
          String ip = NetworkUtils.getLocalIpAddress();
 
+         Server myDomain = new Server()
+                 .url("https://api.renzoproject.site")
+                 .description("My Domain");
+
          Server gateway = new Server()
                  .url(cloudUrl)
                  .description("API Gateway");
@@ -54,6 +58,6 @@ import java.util.List;
                  .url("http://host.docker.internal:8080")
                  .description("Docker Host through Gateway");
 
-         return new OpenAPI().servers(List.of(localhost, gateway, ipBased, docker));
+         return new OpenAPI().servers(List.of(myDomain, localhost, gateway, ipBased, docker));
      }
  }

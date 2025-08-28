@@ -30,6 +30,10 @@ public class SwaggerConfig {
     public OpenAPI employeeServiceOpenAPI() {
         String ip = NetworkUtils.getLocalIpAddress();
 
+        Server myDomain = new Server()
+                .url("https://api.renzoproject.site")
+                .description("My Domain");
+
         Server cloud = new Server()
                 .url(cloudUrl)
                 .description("Cloud");
@@ -60,6 +64,6 @@ public class SwaggerConfig {
                                         .type(io.swagger.v3.oas.models.security.SecurityScheme.Type.HTTP)
                                         .scheme("bearer")
                                         .bearerFormat("JWT")))
-                .servers(List.of(localhost, ipBased, docker, cloud));
+                .servers(List.of(myDomain, localhost, ipBased, docker, cloud));
     }
 }
