@@ -56,6 +56,35 @@ public class SecurityConfig {
         return ReactiveJwtDecoders.fromIssuerLocation(jwtIssuerUri);
     }
 
+//    @Bean
+//    public ServerAuthenticationEntryPoint unauthorizedEntryPoint() {
+//        return (exchange, ex) -> {
+//            var response = exchange.getResponse();
+//            response.setStatusCode(HttpStatus.UNAUTHORIZED);
+//            response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+//
+//            // Determine origin of the request
+//            String origin = exchange.getRequest().getHeaders().getOrigin();
+//            if (origin != null && List.of(
+//                    "http://localhost:4200",
+//                    "https://app.renzoproject.site",
+//                    "https://api.renzoproject.site"
+//            ).contains(origin)) {
+//                response.getHeaders().add("Access-Control-Allow-Origin", origin);
+//                response.getHeaders().add("Vary", "Origin");
+//            }
+//
+//            response.getHeaders().add("Access-Control-Allow-Credentials", "true");
+//            response.getHeaders().add("Access-Control-Allow-Headers", "Authorization, Content-Type");
+//            response.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
+//
+//            byte[] bytes = "{\"error\": \"Unauthorized\"}".getBytes(StandardCharsets.UTF_8);
+//            var buffer = response.bufferFactory().wrap(bytes);
+//
+//            return response.writeWith(Mono.just(buffer));
+//        };
+//    }
+
     @Bean
     public ServerAuthenticationEntryPoint unauthorizedEntryPoint() {
         return (exchange, ex) -> {
@@ -63,27 +92,24 @@ public class SecurityConfig {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
-            // Determine origin of the request
             String origin = exchange.getRequest().getHeaders().getOrigin();
-            if (origin != null && List.of(
-                    "http://localhost:4200",
-                    "https://app.renzoproject.site",
-                    "https://api.renzoproject.site"
-            ).contains(origin)) {
-                response.getHeaders().add("Access-Control-Allow-Origin", origin);
+            if ("http://localhost:4200".equals(origin)) {
+                response.getHeaders().setAccessControlAllowOrigin(origin);
+                response.getHeaders().setAccessControlAllowCredentials(true);
+                response.getHeaders().setAccessControlAllowHeaders(List.of("Authorization", "Content-Type"));
+                response.getHeaders().setAccessControlAllowMethods(
+                        List.of(HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.PATCH, HttpMethod.OPTIONS)
+                );
                 response.getHeaders().add("Vary", "Origin");
             }
 
-            response.getHeaders().add("Access-Control-Allow-Credentials", "true");
-            response.getHeaders().add("Access-Control-Allow-Headers", "Authorization, Content-Type");
-            response.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
-
-            byte[] bytes = "{\"error\": \"Unauthorized\"}".getBytes(StandardCharsets.UTF_8);
-            var buffer = response.bufferFactory().wrap(bytes);
+            byte[] body = "{\"error\": \"Unauthorized\"}".getBytes(StandardCharsets.UTF_8);
+            var buffer = response.bufferFactory().wrap(body);
 
             return response.writeWith(Mono.just(buffer));
         };
     }
+
 
 
 }
