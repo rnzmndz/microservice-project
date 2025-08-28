@@ -73,7 +73,7 @@ public class AuthController {
             ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", tokenResponse.getAccess_token())
                     .httpOnly(true)
                     .secure(true)
-                    .sameSite("Strict")
+                    .sameSite("None")
                     .path("/")
                     .maxAge(Duration.ofMinutes(2))
                     .build();
@@ -81,7 +81,7 @@ public class AuthController {
             ResponseCookie refreshCookie = ResponseCookie.from("REFRESH_TOKEN", tokenResponse.getRefresh_token())
                     .httpOnly(true)
                     .secure(true)
-                    .sameSite("Strict")
+                    .sameSite("None")
                     .path("/")
                     .maxAge(Duration.ofDays(7))
                     .build();
@@ -168,8 +168,8 @@ public class AuthController {
             ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", tokenResponse.getAccess_token())
                     .httpOnly(true)
                     .secure(true)
-//                    .sameSite("None") // Set Strict if prod
-                    .sameSite("Lax") // for dev mode
+                    .sameSite("None") // Set Strict if prod
+//                    .sameSite("Lax") // for dev mode
                     .path("/")
                     .maxAge(Duration.ofMinutes(2))
                     .build();

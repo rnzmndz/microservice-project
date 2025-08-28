@@ -101,7 +101,7 @@ public class CookieAuthenticationSuccessHandler implements ServerAuthenticationS
                     ResponseCookie refreshCookie = ResponseCookie.from("REFRESH_TOKEN", refreshToken)
                             .httpOnly(true)
                             .secure(true)
-                            .sameSite("Strict")
+                            .sameSite("None")
                             .path("/")
                             .maxAge(Duration.ofDays(7))
                             .build();
