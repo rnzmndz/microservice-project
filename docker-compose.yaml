@@ -121,6 +121,10 @@ services:
       - KC_DB_URL=jdbc:postgresql://postgres:5432/keycloak
       - KC_DB_USERNAME=postgres
       - KC_DB_PASSWORD=postgres
+      - KC_PROXY=edge
+      - KC_HOSTNAME=auth.renzoproject.site
+      - KC_HOSTNAME_STRICT=true
+      - KC_FRONTEND_URL=https://auth.renzoproject.site
       - TZ=Asia/Manila
     ports:
       - "8180:8080"
@@ -128,7 +132,7 @@ services:
     volumes:
       - ./config:/opt/keycloak/data/import
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/realms/master" ]
+      test: [ "CMD", "curl", "-f", "https://auth.renzoproject.site/realms/master" ]
       interval: 30s
       timeout: 10s
       retries: 10
