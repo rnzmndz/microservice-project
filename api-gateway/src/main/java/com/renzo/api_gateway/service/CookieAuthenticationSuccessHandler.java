@@ -88,7 +88,7 @@ public class CookieAuthenticationSuccessHandler implements ServerAuthenticationS
                 // ACCESS cookie
                 ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", accessToken)
                         .httpOnly(true)
-                        .secure(false) // Set true if prod
+                        .secure(true)
                         .sameSite("None") // Set Strict if prod
                         .path("/")
                         .maxAge(Duration.ofMinutes(2))
@@ -100,7 +100,7 @@ public class CookieAuthenticationSuccessHandler implements ServerAuthenticationS
                 if (refreshToken != null) {
                     ResponseCookie refreshCookie = ResponseCookie.from("REFRESH_TOKEN", refreshToken)
                             .httpOnly(true)
-                            .secure(false) // true in prod
+                            .secure(true)
                             .sameSite("Strict")
                             .path("/")
                             .maxAge(Duration.ofDays(7))

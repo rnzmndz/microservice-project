@@ -72,7 +72,7 @@ public class AuthController {
             // Create secure HttpOnly cookies
             ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", tokenResponse.getAccess_token())
                     .httpOnly(true)
-                    .secure(true) // set false if testing locally on http
+                    .secure(true)
                     .sameSite("Strict")
                     .path("/")
                     .maxAge(Duration.ofMinutes(2))
@@ -80,7 +80,7 @@ public class AuthController {
 
             ResponseCookie refreshCookie = ResponseCookie.from("REFRESH_TOKEN", tokenResponse.getRefresh_token())
                     .httpOnly(true)
-                    .secure(true) // set false if testing locally on http
+                    .secure(true)
                     .sameSite("Strict")
                     .path("/")
                     .maxAge(Duration.ofDays(7))
@@ -167,7 +167,7 @@ public class AuthController {
 
             ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", tokenResponse.getAccess_token())
                     .httpOnly(true)
-                    .secure(false) // Set true if prod
+                    .secure(true)
 //                    .sameSite("None") // Set Strict if prod
                     .sameSite("Lax") // for dev mode
                     .path("/")
@@ -186,7 +186,7 @@ public class AuthController {
     public ResponseEntity<Void> logout() {
         ResponseCookie deleteAccess = ResponseCookie.from("ACCESS_TOKEN", "")
                 .httpOnly(true)
-                .secure(false) // Set true if prod
+                .secure(true) // Set true if prod
                 .sameSite("None") // Set Strict if prod
                 .path("/")
                 .maxAge(0)
@@ -194,7 +194,7 @@ public class AuthController {
 
         ResponseCookie deleteRefresh = ResponseCookie.from("REFRESH_TOKEN", "")
                 .httpOnly(true)
-                .secure(false) // Set true if prod
+                .secure(true)
                 .sameSite("None") // Set Strict if prod
                 .path("/")
                 .maxAge(0)
