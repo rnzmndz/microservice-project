@@ -72,16 +72,16 @@ public class AuthController {
             // Create secure HttpOnly cookies
             ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", tokenResponse.getAccess_token())
                     .httpOnly(true)
-                    .secure(false)         // false for localhost (HTTP), true in prod (HTTPS)
-                    .sameSite("Lax")       // "Lax" works for local dev; "None" if cross-site and HTTPS
+                    .secure(true) // set false if testing locally on http
+                    .sameSite("Strict")
                     .path("/")
                     .maxAge(Duration.ofMinutes(2))
                     .build();
 
             ResponseCookie refreshCookie = ResponseCookie.from("REFRESH_TOKEN", tokenResponse.getRefresh_token())
                     .httpOnly(true)
-                    .secure(false)         // false for localhost (HTTP), true in prod (HTTPS)
-                    .sameSite("Lax")       // "Lax" works for local dev; "None" if cross-site and HTTPS
+                    .secure(true) // set false if testing locally on http
+                    .sameSite("Strict")
                     .path("/")
                     .maxAge(Duration.ofDays(7))
                     .build();
@@ -167,8 +167,9 @@ public class AuthController {
 
             ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", tokenResponse.getAccess_token())
                     .httpOnly(true)
-                    .secure(false)         // false for localhost (HTTP), true in prod (HTTPS)
-                    .sameSite("Lax")       // "Lax" works for local dev; "None" if cross-site and HTTPS
+                    .secure(false) // Set true if prod
+//                    .sameSite("None") // Set Strict if prod
+                    .sameSite("Lax") // for dev mode
                     .path("/")
                     .maxAge(Duration.ofMinutes(2))
                     .build();
@@ -185,16 +186,16 @@ public class AuthController {
     public ResponseEntity<Void> logout() {
         ResponseCookie deleteAccess = ResponseCookie.from("ACCESS_TOKEN", "")
                 .httpOnly(true)
-                .secure(false)         // false for localhost (HTTP), true in prod (HTTPS)
-                .sameSite("Lax")       // "Lax" works for local dev; "None" if cross-site and HTTPS
+                .secure(false) // Set true if prod
+                .sameSite("None") // Set Strict if prod
                 .path("/")
                 .maxAge(0)
                 .build();
 
         ResponseCookie deleteRefresh = ResponseCookie.from("REFRESH_TOKEN", "")
                 .httpOnly(true)
-                .secure(false)         // false for localhost (HTTP), true in prod (HTTPS)
-                .sameSite("Lax")       // "Lax" works for local dev; "None" if cross-site and HTTPS
+                .secure(false) // Set true if prod
+                .sameSite("None") // Set Strict if prod
                 .path("/")
                 .maxAge(0)
                 .build();

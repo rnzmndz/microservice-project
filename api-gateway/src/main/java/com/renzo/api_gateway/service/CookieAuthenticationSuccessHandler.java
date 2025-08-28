@@ -88,8 +88,8 @@ public class CookieAuthenticationSuccessHandler implements ServerAuthenticationS
                 // ACCESS cookie
                 ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", accessToken)
                         .httpOnly(true)
-                        .secure(false)         // false for localhost (HTTP), true in prod (HTTPS)
-                        .sameSite("Lax")       // "Lax" works for local dev; "None" if cross-site and HTTPS
+                        .secure(false) // Set true if prod
+                        .sameSite("None") // Set Strict if prod
                         .path("/")
                         .maxAge(Duration.ofMinutes(2))
                         .build();
@@ -100,8 +100,8 @@ public class CookieAuthenticationSuccessHandler implements ServerAuthenticationS
                 if (refreshToken != null) {
                     ResponseCookie refreshCookie = ResponseCookie.from("REFRESH_TOKEN", refreshToken)
                             .httpOnly(true)
-                            .secure(false)         // false for localhost (HTTP), true in prod (HTTPS)
-                            .sameSite("Lax")       // "Lax" works for local dev; "None" if cross-site and HTTPS
+                            .secure(false) // true in prod
+                            .sameSite("Strict")
                             .path("/")
                             .maxAge(Duration.ofDays(7))
                             .build();
