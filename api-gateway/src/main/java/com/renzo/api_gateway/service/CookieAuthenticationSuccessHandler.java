@@ -111,7 +111,7 @@ public class CookieAuthenticationSuccessHandler implements ServerAuthenticationS
 
                 // Redirect back to frontend app
                 response.setStatusCode(HttpStatus.FOUND);
-                response.getHeaders().setLocation(URI.create("http://localhost:4200/"));
+                response.getHeaders().setLocation(URI.create("https://localhost:4200/"));
 
                 return response.setComplete();
             });
