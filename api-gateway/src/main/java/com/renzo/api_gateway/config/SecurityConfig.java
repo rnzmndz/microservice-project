@@ -16,6 +16,7 @@ import org.springframework.security.web.server.ServerAuthenticationEntryPoint;
 import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -62,8 +63,20 @@ public class SecurityConfig {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
-            response.getHeaders().add("Access-Control-Allow-Origin", "http://localhost:4200");
+            // Determine origin of the request
+            String origin = exchange.getRequest().getHeaders().getOrigin();
+            if (origin != null && List.of(
+                    "http://localhost:4200",
+                    "https://app.renzoproject.site",
+                    "https://api.renzoproject.site"
+            ).contains(origin)) {
+                response.getHeaders().add("Access-Control-Allow-Origin", origin);
+                response.getHeaders().add("Vary", "Origin");
+            }
+
             response.getHeaders().add("Access-Control-Allow-Credentials", "true");
+            response.getHeaders().add("Access-Control-Allow-Headers", "Authorization, Content-Type");
+            response.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
 
             byte[] bytes = "{\"error\": \"Unauthorized\"}".getBytes(StandardCharsets.UTF_8);
             var buffer = response.bufferFactory().wrap(bytes);
@@ -71,5 +84,6 @@ public class SecurityConfig {
             return response.writeWith(Mono.just(buffer));
         };
     }
+
 
 }
