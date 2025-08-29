@@ -141,4 +141,11 @@ public class KeycloakService {
 
         return roleNames;
     }
+
+    public String getUsername(String userId){
+        UserResource userResource = keycloak.realm(realm).users().get(userId);
+        UserRepresentation user = userResource.toRepresentation();
+
+        return  user.getUsername();
+    }
 }
