@@ -127,11 +127,11 @@ services:
       - TZ=${TIMEZONE}
     ports:
       - "${KEYCLOAK_PORT}:8080"
-    command: ["start", "--optimized", "--import-realm", "--verbose"]
+    command: [ "start", "--import-realm", "--verbose" ]
     volumes:
       - ./config:/opt/keycloak/data/import
     healthcheck:
-      test: [ "CMD", "curl", "-f", "${KEYCLOAK_URL}/realms/master" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/realms/master" ]
       interval: 30s
       timeout: 10s
       retries: 10
