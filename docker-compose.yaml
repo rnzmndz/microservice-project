@@ -115,8 +115,6 @@ services:
       context: .
       dockerfile: Dockerfile.keycloak
     environment:
-      - KEYCLOAK_FRONTEND_URL=https://auth.renzoproject.site
-      - KC_HOSTNAME=auth.renzoproject.site
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
       - KC_DB=postgres
