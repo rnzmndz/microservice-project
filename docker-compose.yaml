@@ -121,6 +121,9 @@ services:
       - KC_DB_URL=${DB_URL}/keycloak
       - KC_DB_USERNAME=${DB_USER}
       - KC_DB_PASSWORD=${DB_PASSWORD}
+      - KEYCLOAK_FRONTEND_URL=https://auth.renzoproject.site
+      - KC_HOSTNAME=auth.renzoproject.site
+      - KC_PROXY=edge
       - TZ=${TIMEZONE}
     ports:
       - "${KEYCLOAK_PORT}:8080"
