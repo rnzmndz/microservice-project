@@ -127,7 +127,7 @@ services:
       - KC_HTTP_ENABLED=true
       - TZ=${TIMEZONE}
     ports:
-      - "${KEYCLOAK_PORT}:8080"
+      - "127.0.0.1:8180:8080"
     command: [ "start", "--import-realm", "--verbose" ]
     volumes:
       - ./config:/opt/keycloak/data/import
