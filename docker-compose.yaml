@@ -7,8 +7,8 @@ services:
     ports:
       - "8761:8761"  # Eureka dashboard
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - TZ=Asia/Manila
+      - SPRING_PROFILES_ACTIVE=${ACTIVE_PROFILE}
+      - TZ=${TIMEZONE}
 #    healthcheck:
 #      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
 #      interval: 30s
@@ -22,9 +22,9 @@ services:
     ports:
       - "8888:8888"
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
-      - TZ=Asia/Manila
+      - SPRING_PROFILES_ACTIVE=${ACTIVE_PROFILE}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_URL}
+      - TZ=${TIMEZONE}
     depends_on:
       - eureka-server
     volumes:
@@ -37,10 +37,10 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
-      - TZ=Asia/Manila
+      - SPRING_PROFILES_ACTIVE=${ACTIVE_PROFILE}
+      - SPRING_CLOUD_CONFIG_URI=${CLOUD_CONFIG_URL}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_URL}
+      - TZ=${TIMEZONE}
     depends_on:
       keycloak:
         condition: service_healthy
@@ -56,10 +56,10 @@ services:
     ports:
       - "8081:8081"
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
-      - TZ=Asia/Manila
+      - SPRING_PROFILES_ACTIVE=${ACTIVE_PROFILE}
+      - SPRING_CLOUD_CONFIG_URI=${CLOUD_CONFIG_URL}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_URL}
+      - TZ=${TIMEZONE}
 #      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/auth_database
 #      - SPRING_DATASOURCE_USERNAME=postgres
 #      - SPRING_DATASOURCE_PASSWORD=postgres
@@ -79,13 +79,13 @@ services:
     ports:
       - "8082:8082"
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/employee_database
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
-      - TZ=Asia/Manila
+      - SPRING_PROFILES_ACTIVE=${ACTIVE_PROFILE}
+      - SPRING_CLOUD_CONFIG_URI=${CLOUD_CONFIG_URL}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_URL}
+      - SPRING_DATASOURCE_URL=${DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - TZ=${TIMEZONE}
     depends_on:
       keycloak:
         condition: service_healthy
@@ -102,9 +102,9 @@ services:
     image: postgres:15-alpine
     environment:
       - POSTGRES_DB=keycloak
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - TZ=Asia/Manila
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - TZ=${TIMEZONE}
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init-db:/docker-entrypoint-initdb.d
@@ -118,17 +118,17 @@ services:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
       - KC_DB=postgres
-      - KC_DB_URL=jdbc:postgresql://postgres:5432/keycloak
-      - KC_DB_USERNAME=postgres
-      - KC_DB_PASSWORD=postgres
-      - TZ=Asia/Manila
+      - KC_DB_URL=${DB_URL}
+      - KC_DB_USERNAME=${DB_USER}
+      - KC_DB_PASSWORD=${DB_PASSWORD}
+      - TZ=${TIMEZONE}
     ports:
       - "8180:8080"
     command: ["start-dev", "--import-realm", "--verbose"]
     volumes:
       - ./config:/opt/keycloak/data/import
     healthcheck:
-      test: [ "CMD", "curl", "-f", "https://auth.renzoproject.site/realms/master" ]
+      test: [ "CMD", "curl", "-f", "${KEYCLOAK_URL}/realms/master" ]
       interval: 30s
       timeout: 10s
       retries: 10
