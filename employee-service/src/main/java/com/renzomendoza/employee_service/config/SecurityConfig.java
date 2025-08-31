@@ -84,6 +84,7 @@ public class SecurityConfig {
                     "/api/v1/employees/search", "ROLE_VIEW_EMPLOYEE_LIST",
                     "/api/v1/employees/job-title", "ROLE_VIEW_EMPLOYEE_LIST"
             ),
+            HttpMethod.POST, Map.of("/api/v1/employees", "ROLE_CREATE_EMPLOYEE"),
             HttpMethod.PATCH, Map.of(
                     "/api/v1/employees/*/emergency-contact", "ROLE_VIEW_EMPLOYEE_UPDATE",
                     "/api/v1/employees/*/contact", "ROLE_VIEW_EMPLOYEE_UPDATE",
