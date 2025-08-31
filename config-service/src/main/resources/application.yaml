@@ -10,7 +10,7 @@ spring:
         git:
           uri: https://github.com/rnzmndz/config.git
 #          search-paths: config // use this when you use the link of microservice-component
-          default-label: main
+          default-label: dev
           clone-on-start: true
 
 eureka:
