@@ -124,6 +124,7 @@ services:
       - KEYCLOAK_FRONTEND_URL=https://auth.renzoproject.site
       - KC_HOSTNAME=auth.renzoproject.site
       - KC_PROXY=edge
+      - KC_HTTP_ENABLED=true
       - TZ=${TIMEZONE}
     ports:
       - "${KEYCLOAK_PORT}:8080"
